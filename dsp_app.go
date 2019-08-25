@@ -17,8 +17,8 @@ func distortion(l int, r int, boost float64, drive float64, tone float64, mix fl
 	gainedL := float64(l) * gain
 	gainedR := float64(r) * gain
 
-	drivenL := ((1 + k) * gainedL) / (1 + k*math.Abs(gainedL))
-	drivenR := ((1 + k) * gainedR) / (1 + k*math.Abs(gainedR))
+	drivenL := (((1 + k) * gainedL) / (1 + k*math.Abs(gainedL))) * math.Abs(float64(l))
+	drivenR := (((1 + k) * gainedR) / (1 + k*math.Abs(gainedR))) * math.Abs(float64(r))
 
 	return int(drivenL), int(drivenR), nil
 }
@@ -32,7 +32,7 @@ func readAndModify(r *wav.Reader) (w []wav.Sample, f *wav.WavFormat) {
 		}
 
 		for _, sample := range samples {
-			left, right, err := distortion(r.IntValue(sample, 0), r.IntValue(sample, 1), 70.0, 40.6, 50.0, 0.5)
+			left, right, err := distortion(r.IntValue(sample, 0), r.IntValue(sample, 1), 70.0, 80, 50.0, 0.5)
 			if err != nil {
 				panic("idk")
 			}
